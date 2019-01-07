@@ -55,7 +55,7 @@ public class CloudNetworkMasterServer {
     public void tryBind() {
         if(!this.isReady) {
             try {
-                this.serverBootstrap.bind(this.ip, this.port).sync().channel().closeFuture().syncUninterruptibly();
+                this.serverBootstrap.bind(this.ip, this.port).sync().channel().closeFuture();
                 CloudNetworkMasterCommandSystem.INSTANCE.launch();
                 new Logger(INFO.class, "Netty-Server bound to: " + this.ip + ":" + this.port);
             } catch (Exception e) {

@@ -48,7 +48,7 @@ public class Master implements Runnable {
         CloudNetworkMasterCommandSystem.INSTANCE.addCloudCommand(new TestCommand());
         CloudNetworkMasterCommandSystem.INSTANCE.addCloudCommand(new StopCommand());
 
-        //new CloudNetworkMasterServer(new CloudSocketAddress("localhost", 2000), packetRegistry, new NetworkHandler()).tryBind();
+        new CloudNetworkMasterServer(new CloudSocketAddress("localhost", 2000), packetRegistry, new NetworkHandler()).tryBind();
         new Logger(INFO.class, "Launched Master!");
         CloudNetworkMasterCommandSystem.INSTANCE.launch();
     }
