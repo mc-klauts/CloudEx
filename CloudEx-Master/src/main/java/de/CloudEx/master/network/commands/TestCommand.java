@@ -4,7 +4,7 @@ import de.CloudEx.service.services.cloud.CloudCommand;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.INFO;
 
-public class TestCommand implements CloudCommand {
+public class TestCommand extends CloudCommand {
 
     @Override
     public void execute(String[] args) {

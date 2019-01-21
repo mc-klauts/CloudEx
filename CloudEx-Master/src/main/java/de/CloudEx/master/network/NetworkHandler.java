@@ -10,8 +10,8 @@ import io.netty.channel.ChannelHandlerContext;
 public class NetworkHandler extends CloudPacketHandler<CloudPacket> {
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, CloudPacket msg) throws Exception {
-
+    protected void messageReceived(ChannelHandlerContext ctx, CloudPacket cloudPacket) throws Exception {
+        
     }
 
     @Override
