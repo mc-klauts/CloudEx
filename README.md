@@ -18,5 +18,5 @@ The Cloud-API also can help you with handleing all your Plug-Ins and Players,
 it makes developing of Plug-Ins easier for you and your Team.
 
 Please Note:
-    All of the features that are listed up in the text are *NOT* implemented yet!
+    All of the features that are listed up in the text are **NOT** implemented yet!
     Updates for the Cloud will be released soon, we will also keep you up to date.
