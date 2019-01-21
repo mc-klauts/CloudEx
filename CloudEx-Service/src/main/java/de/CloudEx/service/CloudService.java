@@ -7,8 +7,11 @@ import java.util.List;
 
 public class CloudService {
 
-    public static final CloudService INSTANCE = new CloudService();
+    private static final CloudService instance = new CloudService();
     public List<Class<? extends CloudPacket>> IN_PACKETS = new ArrayList<Class<? extends CloudPacket>>();
     public List<Class<? extends CloudPacket>> OUT_PACKETS = new ArrayList<Class<? extends CloudPacket>>();
 
+    public static CloudService getInstance() {
+        return instance;
+    }
 }

@@ -6,17 +6,20 @@ import de.CloudEx.service.services.network.CloudPacketDirection;
 
 public class CloudPacketRegistry {
 
+    private static CloudPacketDecoder cloudPacketDecoder;
+    private static CloudPacketEncoder cloudPacketEncoder;
+
     public void addPacket(CloudPacketDirection cloudPacketDirection, CloudPacket cloudPacket) {
         try {
             if (cloudPacketDirection.equals(CloudPacketDirection.IN)) {
-                CloudService.INSTANCE.IN_PACKETS.add(cloudPacket.getClass());
+                CloudService.getInstance().IN_PACKETS.add(cloudPacket.getClass());
 
             } else if (cloudPacketDirection.equals(CloudPacketDirection.OUT)) {
-                CloudService.INSTANCE.OUT_PACKETS.add(cloudPacket.getClass());
+                CloudService.getInstance().OUT_PACKETS.add(cloudPacket.getClass());
 
             } else if (cloudPacketDirection.equals(CloudPacketDirection.BOTH)) {
-                CloudService.INSTANCE.IN_PACKETS.add(cloudPacket.getClass());
-                CloudService.INSTANCE.OUT_PACKETS.add(cloudPacket.getClass());
+                CloudService.getInstance().IN_PACKETS.add(cloudPacket.getClass());
+                CloudService.getInstance().OUT_PACKETS.add(cloudPacket.getClass());
 
             } else {
                 System.out.println("CloudPacketRegistry: CloudPacketDirection error!");
@@ -29,14 +32,14 @@ public class CloudPacketRegistry {
     public void removePacket(CloudPacketDirection cloudPacketDirection, CloudPacket cloudPacket) {
         try {
             if (cloudPacketDirection.equals(CloudPacketDirection.IN)) {
-                CloudService.INSTANCE.IN_PACKETS.remove(cloudPacket.getClass());
+                CloudService.getInstance().IN_PACKETS.remove(cloudPacket.getClass());
 
             } else if (cloudPacketDirection.equals(CloudPacketDirection.OUT)) {
-                CloudService.INSTANCE.OUT_PACKETS.remove(cloudPacket.getClass());
+                CloudService.getInstance().OUT_PACKETS.remove(cloudPacket.getClass());
 
             } else if (cloudPacketDirection.equals(CloudPacketDirection.BOTH)) {
-                CloudService.INSTANCE.IN_PACKETS.remove(cloudPacket.getClass());
-                CloudService.INSTANCE.OUT_PACKETS.remove(cloudPacket.getClass());
+                CloudService.getInstance().IN_PACKETS.remove(cloudPacket.getClass());
+                CloudService.getInstance().OUT_PACKETS.remove(cloudPacket.getClass());
 
             } else {
                 System.out.println("CloudPacketRegistry: CloudPacketDirection error!");
@@ -44,5 +47,21 @@ public class CloudPacketRegistry {
         } catch (Exception e) {
             System.out.println("CloudPacketRegistry: "+e);
         }
+    }
+
+    public void setCloudPacketDecoder(CloudPacketDecoder cloudPacketDecoder) {
+        CloudPacketRegistry.cloudPacketDecoder = cloudPacketDecoder;
+    }
+
+    public void setCloudPacketEncoder(CloudPacketEncoder cloudPacketEncoder) {
+        CloudPacketRegistry.cloudPacketEncoder = cloudPacketEncoder;
+    }
+
+    public CloudPacketDecoder getCloudPacketDecoder() {
+        return cloudPacketDecoder;
+    }
+
+    public CloudPacketEncoder getCloudPacketEncoder() {
+        return cloudPacketEncoder;
     }
 }

@@ -33,7 +33,7 @@ public class CloudNetworkMasterServer {
 
             this.eventLoopGroup = EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
-            this.serverBootstrap = new ServerBootstrap()
+            new ServerBootstrap()
                     .group(this.eventLoopGroup)
                     .channel(EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<Channel>() {
@@ -42,7 +42,8 @@ public class CloudNetworkMasterServer {
                             ch.pipeline().addLast(cloudPacketHandler);
                             isReady = true;
                         }
-                    });
+                    }).bind(this.ip, this.port).sync().channel();
+            CloudNetworkMasterCommandSystem.getInstance().launch();
 
         } catch (Exception e) {
             new Logger(ERROR.class, "CloudNetworkMasterServer: "+e);
@@ -55,8 +56,6 @@ public class CloudNetworkMasterServer {
     public void tryBind() {
         if(!this.isReady) {
             try {
-                this.serverBootstrap.bind(this.ip, this.port).sync().channel().closeFuture().syncUninterruptibly();
-                CloudNetworkMasterCommandSystem.INSTANCE.launch();
                 new Logger(INFO.class, "Netty-Server bound to: " + this.ip + ":" + this.port);
             } catch (Exception e) {
                 new Logger(ERROR.class, "CloudNetworkMasterServer: "+e);

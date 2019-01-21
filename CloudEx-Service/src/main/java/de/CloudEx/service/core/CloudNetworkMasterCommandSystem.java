@@ -5,16 +5,16 @@ import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CloudNetworkMasterCommandSystem {
 
-    public static final CloudNetworkMasterCommandSystem INSTANCE = new CloudNetworkMasterCommandSystem();
+    private static final CloudNetworkMasterCommandSystem instance = new CloudNetworkMasterCommandSystem();
 
-    public List<CloudCommand> commands = new ArrayList<>();
+    public List<CloudCommand> commands = new ArrayList<CloudCommand>();
 
     public void addCloudCommand(CloudCommand cloudCommand) {
         this.commands.add(cloudCommand);
@@ -33,5 +33,9 @@ public class CloudNetworkMasterCommandSystem {
         } catch (Exception e) {
             new Logger(ERROR.class, "CommandSystem: "+e);
         }
+    }
+
+    public static final CloudNetworkMasterCommandSystem getInstance() {
+        return instance;
     }
 }

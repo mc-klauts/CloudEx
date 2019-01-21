@@ -1,8 +1,14 @@
 package de.CloudEx.service.services.cloud;
 
-public interface CloudCommand {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    void execute(String[] args);
-    String getUsage();
+public abstract class CloudCommand {
+
+    public void execute(String[] args) { }
+    public String getUsage() {
+        return "";
+    }
 
 }
