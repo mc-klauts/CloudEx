@@ -1,4 +1,4 @@
-# CloudEx
+## CloudEx
 CloudEx is an Minecraft-Server-System that can handle proxies and gameservers at one time.
 It can handle more than one Minecraft- or BungeeCord Server, by creating groups of servers.
 It also comes with some nice features, like an in-built SignSystem or even a Webinterface 
