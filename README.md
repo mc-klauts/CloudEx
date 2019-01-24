@@ -3,7 +3,7 @@ CloudEx is an Minecraft-Server-System that can handle proxies and gameservers at
 It can handle more than one Minecraft- or BungeeCord Server, by creating groups of servers.
 It also comes with some nice features, like an in-built SignSystem or even a Webinterface 
 to control your Cloud.
-The CloudEx has a AddonSystem, that means you can develope an Module with the VolticModule-API
+The CloudEx has a AddonSystem, that means you can develope an Module with the CloudModule-API
 and load it into your Cloud!
 The Cloud also is smart, for example if your LobbyServer is almost full of players,
 the cloud automaticly creates a new LobbyServer for more players.
