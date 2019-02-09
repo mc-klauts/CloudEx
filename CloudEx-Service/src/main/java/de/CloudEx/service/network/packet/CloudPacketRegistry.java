@@ -9,6 +9,11 @@ public class CloudPacketRegistry {
     private static CloudPacketDecoder cloudPacketDecoder;
     private static CloudPacketEncoder cloudPacketEncoder;
 
+    public CloudPacketRegistry(CloudPacketDecoder cloudPacketDecoder, CloudPacketEncoder cloudPacketEncoder) {
+        this.cloudPacketDecoder = cloudPacketDecoder;
+        this.cloudPacketEncoder = cloudPacketEncoder;
+    }
+
     public void addPacket(CloudPacketDirection cloudPacketDirection, CloudPacket cloudPacket) {
         try {
             if (cloudPacketDirection.equals(CloudPacketDirection.IN)) {

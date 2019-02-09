@@ -1,9 +1,12 @@
 package de.CloudEx.service.network;
 
+import de.CloudEx.service.core.CloudNetworkWrapperCommandSystem;
 import de.CloudEx.service.network.handler.CloudPacketHandler;
 import de.CloudEx.service.network.packet.CloudPacketRegistry;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
+import de.CloudEx.service.services.logging.level.INFO;
+import de.CloudEx.service.services.logging.level.WARN;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -25,7 +28,7 @@ public class CloudNetworkWrapperServer {
     private static int port;
     private static String ip;
 
-    public CloudNetworkWrapperServer(CloudSocketAddress cloudSocketAddress, CloudPacketRegistry cloudPacketRegistry, final CloudPacketHandler cloudPacketHandler) {
+    public CloudNetworkWrapperServer(CloudSocketAddress cloudSocketAddress, final CloudPacketRegistry cloudPacketRegistry, final CloudPacketHandler cloudPacketHandler) {
         try {
             this.port = cloudSocketAddress.getPort();
             this.ip = cloudSocketAddress.getAddress();
@@ -38,13 +41,29 @@ public class CloudNetworkWrapperServer {
                     .handler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel channel) throws Exception {
-                            channel.pipeline().addLast(cloudPacketHandler);
+                            channel.pipeline()
+                                    .addLast(cloudPacketRegistry.getCloudPacketDecoder())
+                                    .addLast(cloudPacketRegistry.getCloudPacketEncoder())
+                                    .addLast(cloudPacketHandler);
                             isReady = true;
                         }
-                    }).bind(this.ip, this.port).sync().channel();
+                    }).connect(this.ip, this.port).sync().channel();
+                    CloudNetworkWrapperCommandSystem.getInstance().launch();
 
         } catch(Exception e) {
             new Logger(ERROR.class, "CloudNetworkWrapperServer: "+e);
+        }
+    }
+
+    public void tryBind() {
+        if(!this.isReady) {
+            try {
+                new Logger(INFO.class, "Netty-Server bound to: " + this.ip + ":" + this.port);
+            } catch (Exception e) {
+                new Logger(ERROR.class, "CloudNetworkWrapperServer: "+e);
+            }
+        } else {
+            new Logger(WARN.class, "Netty-Server not ready...");
         }
     }
 }

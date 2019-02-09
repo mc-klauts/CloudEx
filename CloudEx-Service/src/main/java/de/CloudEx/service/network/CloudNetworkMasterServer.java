@@ -6,6 +6,7 @@ import de.CloudEx.service.network.packet.CloudPacketRegistry;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
 import de.CloudEx.service.services.logging.level.INFO;
+import de.CloudEx.service.services.logging.level.WARN;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -26,23 +27,27 @@ public class CloudNetworkMasterServer {
     private static int port;
     private static String ip;
 
-    public CloudNetworkMasterServer(CloudSocketAddress cloudSocketAddress, CloudPacketRegistry cloudPacketRegistry, final CloudPacketHandler cloudPacketHandler) {
+    public CloudNetworkMasterServer(CloudSocketAddress cloudSocketAddress, final CloudPacketRegistry cloudPacketRegistry, final CloudPacketHandler cloudPacketHandler) {
         try {
             this.port = cloudSocketAddress.getPort();
             this.ip = cloudSocketAddress.getAddress();
 
             this.eventLoopGroup = EPOLL ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 
-            this.serverBootstrap = new ServerBootstrap()
+            new ServerBootstrap()
                     .group(this.eventLoopGroup)
                     .channel(EPOLL ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
-                            ch.pipeline().addLast(cloudPacketHandler);
+                            ch.pipeline()
+                                    .addLast(cloudPacketRegistry.getCloudPacketDecoder())
+                                    .addLast(cloudPacketRegistry.getCloudPacketEncoder())
+                                    .addLast(cloudPacketHandler);
                             isReady = true;
                         }
-                    });
+                    }).bind(this.ip, this.port).sync().channel();
+            CloudNetworkMasterCommandSystem.getInstance().launch();
 
         } catch (Exception e) {
             new Logger(ERROR.class, "CloudNetworkMasterServer: "+e);
@@ -55,12 +60,12 @@ public class CloudNetworkMasterServer {
     public void tryBind() {
         if(!this.isReady) {
             try {
-                this.serverBootstrap.bind(this.ip, this.port).sync().channel().closeFuture().syncUninterruptibly();
-                CloudNetworkMasterCommandSystem.INSTANCE.launch();
                 new Logger(INFO.class, "Netty-Server bound to: " + this.ip + ":" + this.port);
             } catch (Exception e) {
                 new Logger(ERROR.class, "CloudNetworkMasterServer: "+e);
             }
+        } else {
+            new Logger(WARN.class, "Netty-Server not ready...");
         }
     }
 }

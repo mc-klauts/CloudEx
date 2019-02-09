@@ -3,6 +3,7 @@ package de.CloudEx.service.core;
 import de.CloudEx.service.services.cloud.CloudCommand;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
+import de.CloudEx.service.services.logging.level.INFO;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,7 +25,7 @@ public class CloudNetworkMasterCommandSystem {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
-
+            new Logger(INFO.class, "Launched Master!");
             while ((line = reader.readLine()) != null) {
                 for (CloudCommand command : commands) {
                     command.execute(line.split(" "));
