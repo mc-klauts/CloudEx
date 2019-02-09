@@ -11,10 +11,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.CloudEx.master.Launcher</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
 
@@ -29,10 +32,18 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>${targetdirectory}/lib</outputDirectory>
+                            <outputDirectory>./target/lib/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,33 +1,30 @@
 package de.CloudEx.master.manager;
 
 import de.CloudEx.master.network.NetworkHandler;
-import de.CloudEx.master.network.commands.HelpCommand;
-import de.CloudEx.master.network.commands.StopCommand;
-import de.CloudEx.master.network.commands.TestCommand;
+import de.CloudEx.master.network.commands.*;
+import de.CloudEx.master.network.handler.PacketDecoder;
+import de.CloudEx.master.network.handler.PacketEncoder;
+import de.CloudEx.master.network.packets.AuthPacket;
 import de.CloudEx.service.core.CloudNetworkMasterCommandSystem;
 import de.CloudEx.service.network.CloudNetworkMasterServer;
 import de.CloudEx.service.network.CloudSocketAddress;
-import de.CloudEx.service.network.handler.CloudPacketHandler;
 import de.CloudEx.service.network.packet.CloudPacketRegistry;
 import de.CloudEx.service.services.cloud.CloudCommand;
 import de.CloudEx.service.services.logging.Logger;
-import de.CloudEx.service.services.logging.level.ERROR;
 import de.CloudEx.service.services.logging.level.INFO;
-import de.CloudEx.service.services.network.CloudPacket;
 import de.CloudEx.service.services.network.CloudPacketDirection;
-import de.CloudEx.service.services.network.CloudPacketSerializer;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Master implements Runnable {
 
     private static Thread masterThread;
-    public static final Master INSTANCE = new Master();
-    public List<CloudCommand> commands = new ArrayList<>();
+    private static final Master instance = new Master();
+    public List<CloudCommand> commands = new ArrayList<CloudCommand>();
+    private CloudPacketRegistry packetRegistry;
+    private FileManager fileManager;
+    private CloudNetworkMasterCommandSystem commandSystem = CloudNetworkMasterCommandSystem.getInstance();
 
     public void launch() {
         masterThread = new Thread(this, "CloudEx-Master");
@@ -41,19 +38,37 @@ public class Master implements Runnable {
                 " |_____  |_____ |_____| |_____| |_____/ |______ _/   \\_\n" +
                 "                                                       \n" +
                 "\n");
+        new Logger(INFO.class, "Developer: F4LS3, Designer: LucaFX");
+        System.out.println("\n");
         new Logger(INFO.class, "Launching Master...");
-        CloudPacketRegistry packetRegistry = new CloudPacketRegistry();
 
-        CloudNetworkMasterCommandSystem.INSTANCE.addCloudCommand(new HelpCommand());
-        CloudNetworkMasterCommandSystem.INSTANCE.addCloudCommand(new TestCommand());
-        CloudNetworkMasterCommandSystem.INSTANCE.addCloudCommand(new StopCommand());
+        packetRegistry = new CloudPacketRegistry(new PacketDecoder(), new PacketEncoder());
+        fileManager = new FileManager();
 
-        //new CloudNetworkMasterServer(new CloudSocketAddress("localhost", 2000), packetRegistry, new NetworkHandler()).tryBind();
+        this.packetRegistry.addPacket(CloudPacketDirection.BOTH, new AuthPacket());
+        this.fileManager.runFileSystem();
+
+        commandSystem.addCloudCommand(new HelpCommand());
+        commandSystem.addCloudCommand(new TestCommand());
+        commandSystem.addCloudCommand(new StopCommand());
+        commandSystem.addCloudCommand(new CreateCommand());
+        commandSystem.addCloudCommand(new DeleteCommand());
+
+        new CloudNetworkMasterServer(new CloudSocketAddress("localhost", 2000), packetRegistry, new NetworkHandler()).tryBind();
         new Logger(INFO.class, "Launched Master!");
-        CloudNetworkMasterCommandSystem.INSTANCE.launch();
     }
 
     public void stop() {
+        new Logger(INFO.class, "Shutting down Master...");
+        System.exit(0);
+        new Logger(INFO.class, "Shuted down Master!");
+    }
 
+    public static Master getInstance() {
+        return instance;
+    }
+
+    public CloudPacketRegistry getPacketRegistry() {
+        return packetRegistry;
     }
 }
