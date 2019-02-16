@@ -10,7 +10,7 @@ the cloud automaticly creates a new LobbyServer for more players.
 
 The CloudEx-Team gives you a daily Cloud-Support. If you need help with your Cloud 
 or the developing of Cloud-Modules and Cloud-PlugIns we can give Support to you on Discord!
-Discord: Coming soon...
+Discord: https://discord.io/cloudex
 
 Why don't you try CloudEx ?
 It will safe you a lot of working time with your Minecraft-Network!
