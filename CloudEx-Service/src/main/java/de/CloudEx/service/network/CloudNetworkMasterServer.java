@@ -2,7 +2,6 @@ package de.CloudEx.service.network;
 
 import de.CloudEx.service.core.CloudNetworkMasterCommandSystem;
 import de.CloudEx.service.network.handler.CloudPacketHandler;
-import de.CloudEx.service.network.packet.CloudPacketRegistry;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
 import de.CloudEx.service.services.logging.level.INFO;
@@ -16,6 +15,10 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+
+import java.nio.charset.StandardCharsets;
 
 public class CloudNetworkMasterServer {
 
@@ -27,7 +30,7 @@ public class CloudNetworkMasterServer {
     private static int port;
     private static String ip;
 
-    public CloudNetworkMasterServer(CloudSocketAddress cloudSocketAddress, final CloudPacketRegistry cloudPacketRegistry, final CloudPacketHandler cloudPacketHandler) {
+    public CloudNetworkMasterServer(CloudSocketAddress cloudSocketAddress, final CloudPacketHandler cloudPacketHandler) {
         try {
             this.port = cloudSocketAddress.getPort();
             this.ip = cloudSocketAddress.getAddress();
@@ -41,8 +44,8 @@ public class CloudNetworkMasterServer {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline()
-                                    .addLast(cloudPacketRegistry.getCloudPacketDecoder())
-                                    .addLast(cloudPacketRegistry.getCloudPacketEncoder())
+                                    .addLast(new StringDecoder(StandardCharsets.UTF_8))
+                                    .addLast(new StringEncoder(StandardCharsets.UTF_8))
                                     .addLast(cloudPacketHandler);
                             isReady = true;
                         }

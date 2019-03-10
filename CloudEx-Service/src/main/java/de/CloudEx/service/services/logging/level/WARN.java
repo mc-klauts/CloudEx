@@ -7,7 +7,7 @@ public class WARN implements LEVEL {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM.yyyy] [HH:mm:ss]");
 
-    public void printStringLeveledMessage(String loggedMessage) {
-        System.out.println(sdf.format(new Timestamp(System.currentTimeMillis())) + " [WARNING] " + loggedMessage);
+    public void printStringLeveledMessage(Object loggedMessage) {
+        System.out.println("[WARNING] " + loggedMessage);
     }
 }

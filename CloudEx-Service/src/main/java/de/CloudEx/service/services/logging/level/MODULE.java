@@ -1,8 +1,9 @@
 package de.CloudEx.service.services.logging.level;
 
-public class SETUP implements LEVEL {
+public class MODULE implements LEVEL {
 
+    @Override
     public void printStringLeveledMessage(Object loggedMessage) {
-        System.out.println("[SETUP] " + loggedMessage);
+        System.out.println("[MODULE] "+loggedMessage);
     }
 }

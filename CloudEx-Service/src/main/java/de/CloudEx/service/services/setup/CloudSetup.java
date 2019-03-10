@@ -2,6 +2,7 @@ package de.CloudEx.service.services.setup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.CloudEx.service.services.cloud.KeyManager;
 import de.CloudEx.service.services.logging.Logger;
 import de.CloudEx.service.services.logging.level.ERROR;
 import de.CloudEx.service.services.logging.level.SETUP;
@@ -42,18 +43,24 @@ public class CloudSetup {
 
             } else if(type.equals(Type.WRAPPER)) {
                 new Logger(SETUP.class, "Entering Wrapper-Setup...");
+                new Logger(SETUP.class, "Wie soll dieser Wrapper heißen? (z.B. Wrapper-1)");
+                name = scanner.nextLine();
+                obj.put("Wrapper-Name", name);
+
                 new Logger(SETUP.class, "Auf welche Ip soll sich der Wrapper mit dem Master verbinden? (default: localhost)");
                 host = scanner.nextLine();
                 obj.put("Wrapper-Host", host);
 
                 new Logger(SETUP.class, "Auf welchem Port soll sich der Wrapper mit dem Master verbinden? (default: 2000)");
+                port = scanner.nextInt();
                 obj.put("Wrapper-Port", port);
 
-                writer.write(gson.toJson(obj));
-                writer.close();
-
-                new Logger(SETUP.class, "Finished Wrapper-Setup! stoping...");
-                System.exit(0);
+                if(obj.size() == 2) {
+                    writer.write(gson.toJson(obj));
+                    writer.close();
+                    new Logger(SETUP.class, "Finished Wrapper-Setup! stoping...");
+                    System.exit(0);
+                }
 
             } else if(type.equals(Type.WRAPPER_MASTER_SETUP)) {
                 new Logger(SETUP.class, "Entering Wrapper-Setup...");
@@ -67,6 +74,7 @@ public class CloudSetup {
 
                 writer.write(gson.toJson(obj));
                 writer.close();
+                KeyManager.getInstance().generateNewKey(name);
 
                 new Logger(SETUP.class, "Finished Wrapper-Setup! The Wrapper can now be used!");
             }

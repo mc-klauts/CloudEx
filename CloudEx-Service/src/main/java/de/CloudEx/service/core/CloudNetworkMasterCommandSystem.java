@@ -25,7 +25,6 @@ public class CloudNetworkMasterCommandSystem {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
-            new Logger(INFO.class, "Launched Master!");
             while ((line = reader.readLine()) != null) {
                 for (CloudCommand command : commands) {
                     command.execute(line.split(" "));
