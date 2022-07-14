@@ -20,3 +20,6 @@ it makes developing of Plug-Ins easier for you and your Team.
 Please Note:
     All of the features that are listed up in the text are **NOT** implemented yet!
     Updates for the Cloud will be released soon, we will also keep you up to date.
+    
+# !THIS IS OUTDATED AND WILL NOT BE FURTHER DEVELOPED!
+https://github.com/TitanCloudGG
